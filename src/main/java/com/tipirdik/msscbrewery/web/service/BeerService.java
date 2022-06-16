@@ -33,4 +33,9 @@ public class BeerService implements IBeerService{
                 .upc(beerDto.getUpc())
                 .build();
     }
+
+    @Override
+    public void deleteBeerById(UUID beerId) {
+        // Deleted beer by id
+    }
 }

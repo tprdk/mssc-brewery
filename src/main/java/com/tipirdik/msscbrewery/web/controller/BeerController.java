@@ -5,6 +5,7 @@ import com.tipirdik.msscbrewery.web.service.IBeerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,6 +37,19 @@ public class BeerController {
     @PutMapping("/{beerId}")
     public ResponseEntity<Object> updateBeer(@PathVariable UUID beerId, @RequestBody BeerDto beerDto){
         BeerDto updatedBeer = beerService.updateBeerById(beerId, beerDto);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .replacePath("/{beerId}")
+                .buildAndExpand(updatedBeer.getId())
+                .toUri();
+
+        return ResponseEntity.noContent().location(location).build();
+    }
+
+    @DeleteMapping("/{beerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBeer(@PathVariable UUID beerId){
+        beerService.deleteBeerById(beerId);
     }
 }
